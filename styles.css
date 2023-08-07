@@ -35,7 +35,7 @@ hr{
     align-items: center;
     justify-content: center;
     border-radius: 10PX;
-
+    transition-duration: 0.7s;
 }
 .x{
     background-color: #CDC1B4;
@@ -72,7 +72,7 @@ hr{
 }
 .x128{
     border-radius: 15px;
-    background-color: #F3B27A;
+    background-color: #f3cd7a;
     color: white;
 }
 .x256{
