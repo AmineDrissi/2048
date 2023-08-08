@@ -4,11 +4,16 @@ for(var i=1;i<=4;i++){
         $(".board").append("<div class='tile x' id='"+ i+"-"+j+"'></div>")
     }
 }
+//what happens when you click the start button
 $("#startButton").on("click",startGame)
+//what happens when you click the reset button
 $("#resetButton").on("click",reset)
+//we declre the score variable and assign the score header with the score variable
 var score=0
 $("h2").text("Score:"+score)
+//this is the function that executes when we click the button start
 function startGame(){
+    //once we click on start button, it becomes unclickable
     $('#startButton').prop('disabled', true)
     //this generates 2 random boxes with values 2
     var randomPosition1=Math.floor((Math.random()*4)+1)+"-"+Math.floor((Math.random()*4)+1)
@@ -27,8 +32,8 @@ function startGame(){
         var direction=e.key
         switch(direction){
             case "ArrowUp":up();
-                            checkPlay();
-                            spawRandom2();
+                            checkPlay();        //this will check if there are any possible moves or you won
+                            spawRandom2();      //otherwise it ends the game 
                             break;
             case "ArrowDown":down();
                             checkPlay();
@@ -45,7 +50,9 @@ function startGame(){
         }
     })
 }
+//the reset function
 function reset(){
+    //this reloads the page to avoid unexpected errors
     location.reload(true)
     //this restarts the board to empty boxes
     for(var i=1;i<=4;i++){
@@ -59,36 +66,47 @@ function reset(){
         }
     }
 }
+//these are the booleans variables that refer to the possibility of moving the tiles to a certain direction
+//for example, if the tiles can't move to the right, flexibilityRight will become false
+//this is still under developement
 var flexibilityUp=true
 var flexibilityDown=true
 var flexibilityLeft=true
 var flexibilityRight=true
 function up(){
     var oldScore=score
+    //the k loop is extra just to correct any unexpected behavior
     for(var k=0;k<4;k++){
         for(var i=1;i<=4;i++){
             for(var j=1;j<=4;j++){
-                var identificator=i+"-"+j
+                var identificator=i+"-"+j  //this is the id of each tile in the matrix, for exmaple 3-5
+                //if the tile on top of the current tile is empty, they switch 
                 if(($("#"+(i-1)+"-"+j)).attr("class")==="tile x" && $("#"+identificator).attr("class")!=="tile x"){
+                    //to switch two tiles, we just remove the class of the target tile and give it the class of the new tile and its value
                     $("#"+(i-1)+"-"+j).removeClass()
                     var newClass=$("#"+identificator).attr("class")
                     var newValue=$("#"+identificator).text()
                     $("#"+(i-1)+"-"+j).addClass(newClass)
                     $("#"+(i-1)+"-"+j).text(newValue)
+                    //then we remove the class and value of the other tile
+                    //each class has its own css properties defined in the styles.css sheet 
                     $("#"+identificator).removeClass()
                     $("#"+identificator).text("")
                     $("#"+identificator).addClass("tile x")
                 }
+                //if the tile on top of the current tile and the current tile have the same value, we add them into the top tile
                 if(($("#"+(i-1)+"-"+j)).attr("class") === $("#"+identificator).attr("class") && $("#"+identificator).attr("class")!=="tile x"){
-                    var classNumberValue=$("#"+identificator).attr("class")
-                    var numberValue=parseInt($("#"+identificator).text())
-                    numberValue=numberValue*2
-                    score+=numberValue
-                    $("h2").text("Score:"+score)
+                    var classNumberValue=$("#"+identificator).attr("class")    //this is the class of one of the tiles
+                    var numberValue=parseInt($("#"+identificator).text())      //this is the value
+                    numberValue=numberValue*2          //we make the new value of the new tile
+                    score+=numberValue                 //we add it to the score
+                    $("h2").text("Score:"+score)        //we change the score display
                     classNumberValue="tile x"+numberValue
+                    //we change the top tile to the new added tile
                     $("#"+(i-1)+"-"+j).removeClass()
                     $("#"+(i-1)+"-"+j).addClass(classNumberValue)
                     $("#"+(i-1)+"-"+j).text(numberValue)
+                    //and we empty the old tile
                     $("#"+identificator).removeClass()
                     $("#"+identificator).addClass("tile x")
                     $("#"+identificator).text("")
@@ -96,10 +114,13 @@ function up(){
             }
         }
     }
+    //if we click up and no changes occur, the score will remain the same
+    //so we know that there are no more possible moves when we click up
     if(oldScore===score){
         flexibilityUp=false
     }
 }
+//the same to the other functions down,left and right
 function down(){
     var oldScore=score
     for(var k=0;k<4;k++){
